@@ -20,3 +20,5 @@ id_ed25519
 # Cache
 __pycache__/
 *.pyc
+
+hosts
