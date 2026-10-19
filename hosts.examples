@@ -1,0 +1,10 @@
+
+# Inventario de ejemplo para Ansible
+# Copiar este archivo como "hosts" y configurar las IP locales.
+
+[servidores]
+# Cambiar la IP por la de tu maquina virtual openSUSE 16
+servidor1 ansible_host=192.168.1.100 ansible_user=usuario
+
+# Puedes agregar mas servidores:
+# servidor2 ansible_host=192.168.1.101 ansible_user=usuario
