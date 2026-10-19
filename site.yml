@@ -1,0 +1,11 @@
+
+
+---
+- name: Proyecto ASO - openSUSE 16
+  hosts: servidores
+  become: false
+  gather_facts: false
+
+  tasks:
+    - name: Verificar conexion Ansible
+      ansible.builtin.ping:

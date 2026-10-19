@@ -1,0 +1,22 @@
+
+# Claves privadas
+*.pem
+*.key
+id_rsa
+id_ed25519
+
+# Credenciales y secretos locales
+.env
+.env.*
+*.vault_pass
+.vault_pass
+
+# Archivos temporales
+*.retry
+*.log
+*.swp
+*.swo
+
+# Cache
+__pycache__/
+*.pyc
