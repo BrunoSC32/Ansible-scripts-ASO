@@ -1,2 +1,4 @@
+
 ---
-[]
+- name: Cargar tareas de MariaDB
+  ansible.builtin.import_tasks: mariadb.yml

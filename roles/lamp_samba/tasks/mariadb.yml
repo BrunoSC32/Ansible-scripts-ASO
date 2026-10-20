@@ -1,0 +1,16 @@
+
+---
+- name: Instalar MariaDB
+  become: true
+  ansible.builtin.package:
+    name:
+      - mariadb
+      - mariadb-client
+    state: present
+
+- name: Habilitar e iniciar MariaDB
+  become: true
+  ansible.builtin.service:
+    name: mysql
+    enabled: true
+    state: started
