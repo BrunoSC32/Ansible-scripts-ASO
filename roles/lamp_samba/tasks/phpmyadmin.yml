@@ -1,0 +1,5 @@
+---
+- name: Instalar PhpMyAdmin
+  zypper:
+    name: phpmyadmin
+    state: present
