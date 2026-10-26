@@ -1,3 +1,12 @@
 ---
+# roles/postgresql/vars/main.yml
 postgresql_data_dir: /var/lib/pgsql/data
 postgresql_allowed_cidr: 192.168.9.0/24
+
+pg_admin_user: "postgres"
+pg_admin_password: "AdminSecurePassword2026!"
+
+pg_app_db: "app_db"
+
+pg_app_user: "app_user"
+pg_app_password: "UserSecurePassword2026!"
