@@ -1,3 +1,2 @@
-
 [servidores]
-# servidor1 ansible_host=192.168.1.100 ansible_user=usuario
+opensuse ansible_host=192.168.9.129 ansible_user=liarodriguez ansible_python_interpreter=/usr/bin/python3

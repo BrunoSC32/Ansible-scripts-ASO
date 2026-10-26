@@ -1,0 +1,12 @@
+# Configuracion de PostgreSQL para acceso remoto
+listen_addresses = '*'
+port = 5432
+
+# Seguridad SSL/TLS
+ssl = on
+ssl_cert_file = '{{ postgresql_data_dir }}/server.crt'
+ssl_key_file = '{{ postgresql_data_dir }}/server.key'
+ssl_min_protocol_version = 'TLSv1.2'
+
+# Cifrado de contrasenas
+password_encryption = 'scram-sha-256'
