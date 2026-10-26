@@ -1,0 +1,64 @@
+
+---
+- name: Instalar Apache y PHP
+  ansible.builtin.package:
+    name:
+      - apache2
+      - apache2-mod_php8
+      - php8
+      - php8-cli
+      - php8-mysql
+      - php8-mbstring
+    state: present
+  register: paquetes_web
+
+- name: Configurar Apache con MPM prefork
+  ansible.builtin.lineinfile:
+    path: /etc/sysconfig/apache2
+    regexp: '^APACHE_MPM='
+    line: 'APACHE_MPM="prefork"'
+  register: apache_mpm
+
+- name: Consultar modulos habilitados
+  ansible.builtin.command: a2enmod -l
+  register: modulos_apache
+  changed_when: false
+  check_mode: false
+
+- name: Habilitar modulo PHP en Apache
+  ansible.builtin.command: a2enmod php8
+  when: "'php8' not in modulos_apache.stdout.split()"
+  register: modulo_php
+  changed_when: true
+
+- name: Crear pagina de prueba PHP
+  ansible.builtin.copy:
+    dest: /srv/www/htdocs/aso-check.php
+    content: "<?php echo 'ASO_OK'; ?>\n"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Habilitar e iniciar Apache
+  ansible.builtin.systemd:
+    name: apache2
+    enabled: true
+    state: started
+
+- name: Reiniciar Apache si hubo cambios
+  ansible.builtin.systemd:
+    name: apache2
+    state: restarted
+  when: >-
+    paquetes_web.changed or
+    apache_mpm.changed or
+    modulo_php.changed
+
+- name: Verificar ejecucion de PHP
+  ansible.builtin.uri:
+    url: http://127.0.0.1/aso-check.php
+    return_content: true
+  register: respuesta_php
+  failed_when: >-
+    respuesta_php.status != 200 or
+    respuesta_php.content | trim != 'ASO_OK'
