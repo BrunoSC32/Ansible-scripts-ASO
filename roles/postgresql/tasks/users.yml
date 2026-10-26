@@ -1,0 +1,27 @@
+---
+# roles/postgresql/tasks/users.yml
+
+- name: Establecer contrasena para el superusuario postgres
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_user:
+    name: "{{ pg_admin_user }}"
+    password: "{{ pg_admin_password }}"
+    state: present
+
+- name: Asegurar que la base de datos de aplicacion exista
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_db:
+    name: "{{ pg_app_db }}"
+    state: present
+
+- name: Crear usuario de aplicacion con privilegios en la base de datos
+  become: true
+  become_user: postgres
+  community.postgresql.postgresql_user:
+    name: "{{ pg_app_user }}"
+    password: "{{ pg_app_password }}"
+    db: "{{ pg_app_db }}"
+    priv: "ALL"
+    state: present
