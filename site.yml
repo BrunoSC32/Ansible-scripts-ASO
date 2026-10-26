@@ -1,11 +1,8 @@
-
-
 ---
 - name: Proyecto ASO - openSUSE 16
   hosts: servidores
-  become: false
-  gather_facts: false
+  become: true
+  gather_facts: true
 
-  tasks:
-    - name: Verificar conexion Ansible
-      ansible.builtin.ping:
+  roles:
+    - postgresql

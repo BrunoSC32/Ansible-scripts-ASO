@@ -1,14 +1,17 @@
----
-- name: INstalacion de paquetes de PostgreSQL y librerias de PHP
-  zypper:
-	name:
-           - postgresql-server
-	   - php8-pgsql
-	   - python3-psycopg2
-	state: present
 
--name: Habilitar e instalar el servicio de PostgreSQL
- systemd:
-	name: postgresql
-	state: started
-	enable: yes
+---
+- name: Instalar PostgreSQL y librerías necesarias
+  become: true
+  ansible.builtin.zypper:
+    name:
+      - postgresql-server
+      - php8-pgsql
+      - python3-psycopg2
+    state: present
+
+- name: Habilitar e iniciar PostgreSQL
+  become: true
+  ansible.builtin.systemd:
+    name: postgresql
+    enabled: true
+    state: started

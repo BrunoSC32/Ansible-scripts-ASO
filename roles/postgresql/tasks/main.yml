@@ -1,2 +1,6 @@
 ---
-[]
+- name: Instalar PostgreSQL y dependencias
+  ansible.builtin.import_tasks: install.yml
+
+- name: Configurar acceso remoto y SSL/TLS
+  ansible.builtin.import_tasks: security.yml

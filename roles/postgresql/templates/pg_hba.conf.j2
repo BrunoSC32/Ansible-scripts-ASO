@@ -1,0 +1,8 @@
+# Conexiones locales
+local   all   all                         peer
+
+# Conexiones remotas cifradas mediante SSL/TLS
+hostssl all   all   {{ postgresql_allowed_cidr }}   scram-sha-256
+
+# Rechazar conexiones remotas sin SSL/TLS
+hostnossl all all   {{ postgresql_allowed_cidr }}   reject

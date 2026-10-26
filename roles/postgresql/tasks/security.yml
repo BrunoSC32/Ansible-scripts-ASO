@@ -1,0 +1,56 @@
+---
+- name: Instalar OpenSSL
+  become: true
+  ansible.builtin.zypper:
+    name: openssl
+    state: present
+
+- name: Crear certificado autofirmado para PostgreSQL
+  become: true
+  ansible.builtin.command:
+    argv:
+      - openssl
+      - req
+      - -new
+      - -x509
+      - -nodes
+      - -days
+      - "365"
+      - -subj
+      - "/CN={{ inventory_hostname }}"
+      - -keyout
+      - "{{ postgresql_data_dir }}/server.key"
+      - -out
+      - "{{ postgresql_data_dir }}/server.crt"
+    creates: "{{ postgresql_data_dir }}/server.crt"
+
+- name: Proteger la clave privada
+  become: true
+  ansible.builtin.file:
+    path: "{{ postgresql_data_dir }}/server.key"
+    owner: postgres
+    group: postgres
+    mode: "0600"
+
+- name: Asignar permisos al certificado
+  become: true
+  ansible.builtin.file:
+    path: "{{ postgresql_data_dir }}/server.crt"
+    owner: postgres
+    group: postgres
+    mode: "0644"
+
+- name: Instalar configuraciones de PostgreSQL
+  become: true
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: postgres
+    group: postgres
+    mode: "0600"
+  loop:
+    - src: postgresql.conf.j2
+      dest: "{{ postgresql_data_dir }}/postgresql.conf"
+    - src: pg_hba.conf.j2
+      dest: "{{ postgresql_data_dir }}/pg_hba.conf"
+  notify: Reiniciar PostgreSQL
