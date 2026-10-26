@@ -1,0 +1,26 @@
+---
+# roles/lamp_samba/tasks/samba_users.yml
+
+- name: Asegurar que el grupo del sistema para Samba exista
+  ansible.builtin.group:
+    name: "{{ smb_user_group | default('sambagroup') }}"
+    state: present
+
+- name: Crear usuario de sistema para acceso a Samba
+  ansible.builtin.user:
+    name: "{{ smb_username | default('sambauser') }}"
+    group: "{{ smb_user_group | default('sambagroup') }}"
+    shell: /sbin/nologin
+    create_home: false
+    state: present
+
+- name: Registrar o actualizar usuario en la base de contrasenas de Samba
+  ansible.builtin.shell: >
+    (echo "{{ smb_password | default('SambaSecure2026!') }}"; echo "{{ smb_password | default('SambaSecure2026!') }}") | smbpasswd -s -a {{ smb_username | default('sambauser') }}
+  register: smb_user_result
+  changed_when: "'Added user' in smb_user_result.stdout or 'Password changed' in smb_user_result.stdout"
+  failed_when: smb_user_result.rc != 0 and 'Failed to add entry' in smb_user_result.stderr
+
+- name: Asegurar que el usuario de Samba este habilitado
+  ansible.builtin.command: smbpasswd -e {{ smb_username | default('sambauser') }}
+  changed_when: false
