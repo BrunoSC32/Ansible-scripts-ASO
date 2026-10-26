@@ -1,4 +1,9 @@
-
 ---
-- name: Cargar tareas de MariaDB
+- name: Instalar Apache y PHP
+  ansible.builtin.import_tasks: apache_php.yml
+
+- name: Instalar MariaDB
   ansible.builtin.import_tasks: mariadb.yml
+
+- name: Instalar phpMyAdmin
+  ansible.builtin.import_tasks: phpmyadmin.yml
