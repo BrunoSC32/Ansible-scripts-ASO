@@ -8,8 +8,8 @@
 - name: Instalar phpMyAdmin
   ansible.builtin.import_tasks: phpmyadmin.yml
 
-- name: Configurar recurso compartido Samba
-  ansible.builtin.import_tasks: samba_share.yml
-
 - name: Crear usuarios Samba
   ansible.builtin.import_tasks: samba_users.yml
+
+- name: Configurar recurso compartido Samba
+  ansible.builtin.import_tasks: samba_share.yml
