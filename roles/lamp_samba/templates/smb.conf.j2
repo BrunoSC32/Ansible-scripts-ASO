@@ -1,0 +1,16 @@
+# Archivo gestionado por Ansible - no editar a mano
+[global]
+   workgroup = {{ smb_workgroup | default('WORKGROUP') }}
+   server string = Servidor Samba ASO
+   security = user
+   map to guest = Never
+
+[compartido]
+   path = {{ smb_share_path | default('/srv/samba/compartido') }}
+   browseable = yes
+   writable = yes
+   guest ok = no
+   valid users = {{ smb_username | default('sambauser') }}
+   force group = {{ smb_user_group | default('sambagroup') }}
+   create mask = 0664
+   directory mask = 0775

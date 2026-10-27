@@ -1,0 +1,42 @@
+---
+# roles/lamp_samba/tasks/samba_share.yml
+
+- name: Instalar Samba
+  ansible.builtin.zypper:
+    name: samba
+    state: present
+
+- name: Asegurar que el grupo del sistema para Samba exista
+  ansible.builtin.group:
+    name: "{{ smb_user_group | default('sambagroup') }}"
+    state: present
+
+- name: Crear directorio compartido
+  ansible.builtin.file:
+    path: "{{ smb_share_path | default('/srv/samba/compartido') }}"
+    state: directory
+    owner: root
+    group: "{{ smb_user_group | default('sambagroup') }}"
+    mode: '2770'
+
+- name: Desplegar smb.conf desde plantilla
+  ansible.builtin.template:
+    src: smb.conf.j2
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: true
+  notify: Reiniciar smb
+
+- name: Habilitar e iniciar el servicio smb
+  ansible.builtin.systemd:
+    name: smb
+    enabled: true
+    state: started
+
+- name: Abrir Samba en el firewall (si firewalld existe)
+  ansible.builtin.shell: >
+    if command -v firewall-cmd >/dev/null 2>&1; then
+    firewall-cmd --permanent --add-service=samba && firewall-cmd --reload; fi
+  changed_when: false
