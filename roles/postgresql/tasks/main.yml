@@ -4,3 +4,6 @@
 
 - name: Configurar acceso remoto y SSL/TLS
   ansible.builtin.import_tasks: security.yml
+
+- name: Configurar usuarios PostgreSQL
+  ansible.builtin.import_tasks: users.yml
