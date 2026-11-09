@@ -53,6 +53,8 @@ Instala la colección utilizada para administrar PostgreSQL:
 ansible-galaxy collection install community.postgresql
 ```
 
+(El repositorio incluye `requirements.yml` con esta misma colección: `ansible-galaxy collection install -r requirements.yml`.)
+
 ## 4. VM 1: descargar el repositorio
 
 ```bash
@@ -71,6 +73,8 @@ ssh-copy-id USUARIO_VM2@IP_VM2
 ssh USUARIO_VM2@IP_VM2
 ```
 
+Si recreaste o restauraste la VM 2 con la misma IP y aparece `REMOTE HOST IDENTIFICATION HAS CHANGED`, borra la huella vieja con `ssh-keygen -R IP_VM2` y repite el `ssh`.
+
 Sustituye `USUARIO_VM2` por el usuario de la VM destino e `IP_VM2` por su dirección IP. La primera conexión puede solicitar confirmar la huella SSH.
 
 ## 6. VM 1: preparar el inventario `hosts`
@@ -78,6 +82,7 @@ Sustituye `USUARIO_VM2` por el usuario de la VM destino e `IP_VM2` por su direcc
 Desde la carpeta del repositorio:
 
 ```bash
+cp hosts.example hosts
 nano hosts
 ```
 
@@ -102,7 +107,7 @@ La primera orden debe devolver `pong`; la segunda debe validar la sintaxis del p
 ## 8. VM 1: ejecutar instalación remota
 
 ```bash
-ansible-playbook site.yml --ask-become-pass
+time ansible-playbook site.yml --ask-become-pass
 ```
 
 Introduce la contraseña de `sudo` del usuario de la VM 2 cuando se solicite. En el resumen final comprueba que `failed=0` y `unreachable=0`.
