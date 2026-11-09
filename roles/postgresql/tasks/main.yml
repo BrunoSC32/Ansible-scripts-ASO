@@ -7,3 +7,8 @@
 
 - name: Configurar usuarios PostgreSQL
   ansible.builtin.import_tasks: users.yml
+
+# Aplica el reinicio de PostgreSQL ahora (SSL/listen_addresses) y no al final del play,
+# para que no dependa de que el resto de los roles terminen bien.
+- name: Aplicar reinicio pendiente de PostgreSQL
+  ansible.builtin.meta: flush_handlers

@@ -8,8 +8,10 @@
 - name: Instalar phpMyAdmin
   ansible.builtin.import_tasks: phpmyadmin.yml
 
-- name: Crear usuarios Samba
-  ansible.builtin.import_tasks: samba_users.yml
-
+# samba_share.yml instala el paquete samba, por eso debe ir ANTES de samba_users.yml
+# (smbpasswd no existe hasta que Samba esta instalado).
 - name: Configurar recurso compartido Samba
   ansible.builtin.import_tasks: samba_share.yml
+
+- name: Crear usuarios Samba
+  ansible.builtin.import_tasks: samba_users.yml

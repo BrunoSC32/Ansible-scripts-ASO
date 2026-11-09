@@ -45,6 +45,12 @@
     enabled: true
     state: started
 
+- name: Abrir HTTP en el firewall (si firewalld existe)
+  ansible.builtin.shell: >
+    if command -v firewall-cmd >/dev/null 2>&1; then
+    firewall-cmd --permanent --add-service=http && firewall-cmd --reload; fi
+  changed_when: false
+
 - name: Reiniciar Apache si hubo cambios
   ansible.builtin.systemd:
     name: apache2

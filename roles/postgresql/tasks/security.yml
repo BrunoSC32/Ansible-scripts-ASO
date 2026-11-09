@@ -54,3 +54,10 @@
     - src: pg_hba.conf.j2
       dest: "{{ postgresql_data_dir }}/pg_hba.conf"
   notify: Reiniciar PostgreSQL
+
+- name: Abrir PostgreSQL en el firewall (si firewalld existe)
+  become: true
+  ansible.builtin.shell: >
+    if command -v firewall-cmd >/dev/null 2>&1; then
+    firewall-cmd --permanent --add-service=postgresql && firewall-cmd --reload; fi
+  changed_when: false
